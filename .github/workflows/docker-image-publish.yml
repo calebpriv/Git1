@@ -1,0 +1,30 @@
+name: Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Cambia a la rama que desees monitorear
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Clona el repositorio
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Configura Docker para autenticarse en Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.USERNAME_DOCKER }}
+        password: ${{ secrets.PATH_DOCKER }}
+
+    # 3. Construye la imagen de Docker
+    - name: Build Docker image
+      run: docker build -t my-dockerhub-username/my-image-name:latest .
+
+    # 4. Publica la imagen en Docker Hub
+    - name: Push Docker image
+      run: docker push my-dockerhub-username/my-image-name:latest
